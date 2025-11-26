@@ -1,31 +1,55 @@
-// src/navigation/TabNavigator.js
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import HomeScreen from '../screens/HomeScreen';
-import StudyPlanScreen from '../screens/StudyPlanScreen';
-import BooksScreen from '../screens/BooksScreen';
-import ProgressScreen from '../screens/ProgressScreen';
-import LeaderboardScreen from '../screens/LeaderboardScreen';
+import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from '../context/ThemeContext';
+
+import DashboardScreen from '../screens/DashboardScreen';
+import SyllabusScreen from '../screens/SyllabusScreen';
+import ReadingPathScreen from '../screens/ReadingPathScreen';
+import PDFScreen from '../screens/PDFScreen';
+import NotesScreen from '../screens/NotesScreen';
+import AIScreen from '../screens/AIScreen';
+import QuizzesScreen from '../screens/QuizzesScreen';
+import VideoScreen from '../screens/VideoScreen';
 import ProfileScreen from '../screens/ProfileScreen';
-import { colors } from '../constants/theme';
 
 const Tab = createBottomTabNavigator();
 
 export default function TabNavigator() {
+  const { theme } = useTheme();
+
   return (
     <Tab.Navigator
-      screenOptions={{
+      screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarActiveTintColor: colors.primary,
+        tabBarActiveTintColor: theme.primary,
         tabBarInactiveTintColor: 'gray',
-        tabBarStyle: { backgroundColor: colors.card },
-      }}
+        tabBarStyle: { backgroundColor: theme.background },
+        tabBarIcon: ({ color, size }) => {
+          let iconName;
+          switch (route.name) {
+            case 'Dashboard': iconName = 'home'; break;
+            case 'Syllabus': iconName = 'book'; break;
+            case 'ReadingPath': iconName = 'list'; break;
+            case 'PDF': iconName = 'document'; break;
+            case 'Notes': iconName = 'create'; break;
+            case 'AI': iconName = 'bulb'; break;
+            case 'Quizzes': iconName = 'clipboard'; break;
+            case 'Video': iconName = 'videocam'; break;
+            case 'Profile': iconName = 'person'; break;
+          }
+          return <Ionicons name={iconName} size={size} color={color} />;
+        },
+      })}
     >
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="StudyPlan" component={StudyPlanScreen} />
-      <Tab.Screen name="Books" component={BooksScreen} />
-      <Tab.Screen name="Progress" component={ProgressScreen} />
-      <Tab.Screen name="Leaderboard" component={LeaderboardScreen} />
+      <Tab.Screen name="Dashboard" component={DashboardScreen} />
+      <Tab.Screen name="Syllabus" component={SyllabusScreen} />
+      <Tab.Screen name="ReadingPath" component={ReadingPathScreen} />
+      <Tab.Screen name="PDF" component={PDFScreen} />
+      <Tab.Screen name="Notes" component={NotesScreen} />
+      <Tab.Screen name="AI" component={AIScreen} />
+      <Tab.Screen name="Quizzes" component={QuizzesScreen} />
+      <Tab.Screen name="Video" component={VideoScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );

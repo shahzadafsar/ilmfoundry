@@ -1,10 +1,54 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet, Switch } from 'react-native';
+import { useTheme } from '../context/ThemeContext';
+import { spacing } from '../constants/theme';
+import Card from '../components/ui/Card';
 
-export default function HomeScreen() {
+export default function ProfileScreen() {
+  const { theme, isDark, toggleTheme } = useTheme();
+
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Profile Screen</Text>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <Card>
+        <Text style={[styles.title, { color: theme.text }]}>Profile Settings</Text>
+
+        <View style={styles.row}>
+          <Text style={[styles.label, { color: theme.text }]}>Dark Mode</Text>
+          <Switch
+            value={isDark}
+            onValueChange={toggleTheme}
+            thumbColor={isDark ? theme.primary : '#f4f3f4'}
+            trackColor={{ false: '#767577', true: '#81b0ff' }}
+          />
+        </View>
+      </Card>
+
+      <Card>
+        <Text style={[styles.title, { color: theme.text }]}>User Information</Text>
+        <Text style={[styles.label, { color: theme.text }]}>Name: Shahzad</Text>
+        <Text style={[styles.label, { color: theme.text }]}>Email: shahzad@example.com</Text>
+      </Card>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: spacing.m,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: spacing.m,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: spacing.m,
+  },
+  label: {
+    fontSize: 16,
+  },
+});

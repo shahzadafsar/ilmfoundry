@@ -1,37 +1,24 @@
-// App.js
-import 'react-native-gesture-handler';
-import 'react-native-reanimated';
-
-import React, { useEffect } from 'react';
-import { PaperProvider } from 'react-native-paper';
+import React from 'react';
+import { StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import AppNavigator from './src/navigation/AppNavigator';
-import { supabase } from './supabase';
+import TabNavigator from './src/navigation/TabNavigator';
+import { ThemeProvider, useTheme } from './src/context/ThemeContext';
 
 export default function App() {
-  // --- Supabase connection test (non-intrusive) ---
-  useEffect(() => {
-    async function testSupabase() {
-      try {
-        const { data, error } = await supabase.auth.getSession();
-        if (error) {
-          console.log('Supabase Connection Error:', error.message);
-        } else {
-          console.log('Supabase Connected Successfully. Session:', data);
-        }
-      } catch (err) {
-        console.log('Unexpected Supabase Error:', err.message);
-      }
-    }
-    testSupabase();
-  }, []);
-  // -------------------------------------------------
+  return (
+    <ThemeProvider>
+      <MainApp />
+    </ThemeProvider>
+  );
+}
+
+function MainApp() {
+  const { isDark } = useTheme();
 
   return (
-    <PaperProvider>
-      <NavigationContainer>
-        <AppNavigator />
-      </NavigationContainer>
-    </PaperProvider>
+    <NavigationContainer>
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} />
+      <TabNavigator />
+    </NavigationContainer>
   );
 }
