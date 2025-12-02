@@ -1,11 +1,20 @@
 import React from 'react';
-import { View, Text, StyleSheet, Switch } from 'react-native';
+import { View, Text, StyleSheet, Switch, TouchableOpacity, Alert } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
 import { spacing } from '../constants/theme';
 import Card from '../components/ui/Card';
+import { supabase } from '../../supabaseClient';
+import { useNavigation } from '@react-navigation/native';
 
 export default function ProfileScreen() {
   const { theme, isDark, toggleTheme } = useTheme();
+  const navigation = useNavigation();
+
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) return Alert.alert('Error', error.message);
+    navigation.replace('Login');
+  };
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
@@ -28,6 +37,10 @@ export default function ProfileScreen() {
         <Text style={[styles.label, { color: theme.text }]}>Name: Shahzad</Text>
         <Text style={[styles.label, { color: theme.text }]}>Email: shahzad@example.com</Text>
       </Card>
+
+      <TouchableOpacity style={[styles.button, { backgroundColor: theme.primary }]} onPress={handleLogout}>
+        <Text style={[styles.buttonText]}>Logout</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -50,5 +63,15 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
+  },
+  button: {
+    padding: 15,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: spacing.m,
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });

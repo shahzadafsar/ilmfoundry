@@ -1,7 +1,9 @@
+import 'react-native-gesture-handler';
 import React from 'react';
 import { StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import TabNavigator from './src/navigation/TabNavigator';
+
+import AppNavigator from './src/navigation/AppNavigator';
 import { ThemeProvider, useTheme } from './src/context/ThemeContext';
 
 export default function App() {
@@ -18,7 +20,7 @@ function MainApp() {
   return (
     <NavigationContainer>
       <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} />
-      <TabNavigator />
+      <AppNavigator />       {/* Back to original navigator */}
     </NavigationContainer>
   );
 }

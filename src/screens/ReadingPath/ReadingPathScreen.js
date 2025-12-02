@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import Card from '../components/ui/Card';
-import Button from '../components/ui/Button';
-import ProgressBar from '../components/ui/ProgressBar';
-import { useTheme } from '../context/ThemeContext';
-import { spacing } from '../constants/theme';
+import Card from '../../components/ui/Card';
+import Button from '../../components/ui/Button';
+import ProgressBar from '../../components/ui/ProgressBar';
+import { useTheme } from '../../context/ThemeContext';
+import { spacing } from '../../constants/theme';
 
 export default function ReadingPathScreen() {
   const { theme } = useTheme();

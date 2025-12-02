@@ -1,73 +1,64 @@
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { TextInput, Button, Text } from 'react-native-paper';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { supabase } from '../../supabaseClient';
+import { useNavigation } from '@react-navigation/native';
 
-export default function LoginScreen({ navigation }) {
+export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigation = useNavigation();
+
+  const handleLogin = async () => {
+    if (!email || !password) {
+      Alert.alert('Error', 'Please enter email and password');
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (error) throw error;
+      if (data.user) navigation.replace('MainTabs');
+    } catch (err) {
+      Alert.alert('Error', err.message);
+    }
+  };
 
   return (
     <View style={styles.container}>
-      <Text variant="headlineMedium" style={styles.title}>
-        Login
-      </Text>
-
+      <Text style={styles.header}>Login</Text>
       <TextInput
-        label="Email"
-        mode="outlined"
         style={styles.input}
-        keyboardType="email-address"
-        autoCapitalize="none"
+        placeholder="Email"
         value={email}
         onChangeText={setEmail}
+        keyboardType="email-address"
+        autoCapitalize="none"
       />
-
       <TextInput
-        label="Password"
-        mode="outlined"
-        secureTextEntry
         style={styles.input}
+        placeholder="Password"
         value={password}
         onChangeText={setPassword}
+        secureTextEntry
       />
-
-      <Button
-        mode="contained"
-        style={styles.button}
-        onPress={() => navigation.replace('MainTabs')} // Navigate to MainTabs after login
-      >
-        Login
-      </Button>
-
-      <Text
-        style={styles.link}
-        onPress={() => navigation.navigate('Register')}
-      >
-        Create an account
-      </Text>
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
+        <Text style={styles.buttonText}>Login</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.replace('Register')}>
+        <Text style={styles.link}>Don't have an account? Register</Text>
+      </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    justifyContent: 'center',
-  },
-  title: {
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  input: {
-    marginBottom: 12,
-  },
-  button: {
-    marginTop: 10,
-  },
-  link: {
-    textAlign: 'center',
-    marginTop: 15,
-    color: '#1e88e5',
-  },
+  container: { flex: 1, padding: 20, justifyContent: 'center' },
+  header: { fontSize: 28, fontWeight: 'bold', marginBottom: 20, textAlign: 'center' },
+  input: { borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 12, marginBottom: 12 },
+  button: { backgroundColor: '#007bff', padding: 15, borderRadius: 8, alignItems: 'center' },
+  buttonText: { color: '#fff', fontWeight: 'bold' },
+  link: { color: '#007bff', textAlign: 'center', marginTop: 15 },
 });
